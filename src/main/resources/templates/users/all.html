@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hello world.</title>
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+
+</head>
+<body>
+
+<ul>
+    <li th:each="user : ${users}" th:text="${user.getUsername()}"></li>
+</ul>
+
+<script type="application/javascript" src="js/main.js"></script>
+</body>
+</html>
