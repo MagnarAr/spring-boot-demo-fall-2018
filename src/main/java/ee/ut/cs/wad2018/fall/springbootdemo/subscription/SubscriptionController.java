@@ -1,7 +1,7 @@
 package ee.ut.cs.wad2018.fall.springbootdemo.subscription;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +14,12 @@ import java.util.List;
 public class SubscriptionController {
 
     private final SubscriptionRepository subscriptionRepository;
+    private final SimpMessageSendingOperations messagingTemplate;
 
     @Autowired
-    SubscriptionController(SubscriptionRepository subscriptionRepository) {
+    SubscriptionController(SubscriptionRepository subscriptionRepository, SimpMessageSendingOperations messagingTemplate) {
         this.subscriptionRepository = subscriptionRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @GetMapping(path = "/")
@@ -39,13 +41,15 @@ public class SubscriptionController {
         // save new entity
         subscriptionRepository.save(entity);
 
+        messagingTemplate.convertAndSend("/topic/subscriptions", subscriptionDTO);
+
         // redirect to home page
         return "redirect:/";
     }
 
     private Subscription mapDtoToEntity(SubscriptionDTO subscriptionDTO) {
         Subscription subscriptionEntity = new Subscription();
-        subscriptionEntity.setName(subscriptionDTO.getNimi33());
+        subscriptionEntity.setName(subscriptionDTO.getName());
         subscriptionEntity.setEmail(subscriptionDTO.getEmail());
         return subscriptionEntity;
     }

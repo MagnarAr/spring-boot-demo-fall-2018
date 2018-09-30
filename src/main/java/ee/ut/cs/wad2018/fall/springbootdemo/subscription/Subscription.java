@@ -14,8 +14,7 @@ import javax.validation.constraints.Size;
 public class Subscription {
 
     @Id
-    @SequenceGenerator(name="subscription_id_seq", sequenceName="subscription_subscription_id_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subscription_id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long subscriptionId;
 
     @NotNull
