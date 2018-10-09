@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+
 @Controller
 public class HomeController {
 
     @RequestMapping(path = "/test", method = RequestMethod.GET)
-    public String getTestPage() {
+    public String getTestPage(Principal authToken) {
         return "home/index";
     }
 
