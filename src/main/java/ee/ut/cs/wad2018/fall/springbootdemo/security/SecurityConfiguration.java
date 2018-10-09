@@ -1,4 +1,4 @@
-package ee.ut.cs.wad2018.fall.springbootdemo;
+package ee.ut.cs.wad2018.fall.springbootdemo.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,7 +16,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable();
 
         // by default allow requests to any URL
-        http.authorizeRequests().antMatchers("/**").permitAll();
+        http.authorizeRequests()
+                .antMatchers("/secured/**").authenticated()
+                .antMatchers("/**").permitAll()
+            .and()
+                .formLogin().loginPage("/smart-id/login");
     }
 
 }

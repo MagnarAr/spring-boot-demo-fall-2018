@@ -24,4 +24,15 @@ public class HomeController {
         model.addAttribute("nameTemplate", nameFromUrl);
         return "home/index_dynamic";
     }
+
+    @GetMapping(path = "/smart-id/login")
+    public String getSmartIdLoginPage() {
+        return "smartid/login";
+    }
+
+    @GetMapping(path = "/secured")
+    public String getSecuredPage() {
+        return "secured/test";
+    }
+
 }
