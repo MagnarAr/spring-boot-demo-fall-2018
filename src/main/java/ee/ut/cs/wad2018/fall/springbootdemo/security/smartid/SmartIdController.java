@@ -7,8 +7,6 @@ import ee.sk.smartid.exception.UserRefusedException;
 import ee.sk.smartid.rest.dao.NationalIdentity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -18,6 +16,8 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/smart-id/authentication")
 public class SmartIdController {
+
+    public static final String AUTHENTICATION_RESULT_KEY = "SMART_ID_AUTHENTICATION_RESULT";
 
     private final SmartIdClient smartIdClient;
 
@@ -54,14 +54,7 @@ public class SmartIdController {
         SmartIdAuthenticationResult authenticationResult = authenticationResponseValidator.validate(authenticationResponse);
 
         //if (authenticationResult.isValid()) {
-
-            Authentication auth = new SmartIdAuthenticationToken(
-                    authenticationResult.getAuthenticationIdentity(),
-                    null,
-                    null
-            );
-            SecurityContextHolder.getContext().setAuthentication(auth);
-
+            httpSession.setAttribute(AUTHENTICATION_RESULT_KEY, authenticationResult);
         //}
         return authenticationResult;
     }
