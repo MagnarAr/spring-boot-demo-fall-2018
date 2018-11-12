@@ -19,17 +19,17 @@ public class SmartIdController {
 
     public static final String AUTHENTICATION_RESULT_KEY = "SMART_ID_AUTHENTICATION_RESULT";
 
-    private final SmartIdClient smartIdClient;
+    private final SmartIdService smartIdService;
 
     @Autowired
-    SmartIdController(SmartIdClient smartIdClient) {
-        this.smartIdClient = smartIdClient;
+    SmartIdController(SmartIdService smartIdService) {
+        this.smartIdService = smartIdService;
     }
 
     @PostMapping(value = "/start")
     public Verification startAuthentication(@RequestBody NationalIdentity nationalIdentity, HttpSession httpSession) {
         // For security reasons a new hash value must be created for each new authentication request
-        AuthenticationHash authenticationHash = AuthenticationHash.generateRandomHash();
+        AuthenticationHash authenticationHash = smartIdService.getAuthenticationHash();
 
         httpSession.setAttribute("nationalIdentity", nationalIdentity);
         httpSession.setAttribute("authenticationHash", authenticationHash);
@@ -41,17 +41,9 @@ public class SmartIdController {
 
     @PostMapping(value = "/poll")
     public SmartIdAuthenticationResult pollAuthenticationResult(HttpSession httpSession) {
-
-        SmartIdAuthenticationResponse authenticationResponse = smartIdClient
-                .createAuthentication()
-                .withNationalIdentity((NationalIdentity) httpSession.getAttribute("nationalIdentity"))
-                .withAuthenticationHash((AuthenticationHash) httpSession.getAttribute("authenticationHash"))
-                .withCertificateLevel("QUALIFIED") // Certificate level can either be "QUALIFIED" or "ADVANCED"
-                .withDisplayText("Sisselogimine")
-                .authenticate();
-
-        AuthenticationResponseValidator authenticationResponseValidator = new AuthenticationResponseValidator();
-        SmartIdAuthenticationResult authenticationResult = authenticationResponseValidator.validate(authenticationResponse);
+        NationalIdentity nationalIdentity = (NationalIdentity) httpSession.getAttribute("nationalIdentity");
+        AuthenticationHash authenticationHash = (AuthenticationHash) httpSession.getAttribute("authenticationHash");
+        SmartIdAuthenticationResult authenticationResult = smartIdService.authenticate(nationalIdentity, authenticationHash);
 
         //if (authenticationResult.isValid()) {
             httpSession.setAttribute(AUTHENTICATION_RESULT_KEY, authenticationResult);

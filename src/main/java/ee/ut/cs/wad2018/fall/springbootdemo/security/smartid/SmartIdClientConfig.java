@@ -1,5 +1,6 @@
 package ee.ut.cs.wad2018.fall.springbootdemo.security.smartid;
 
+import ee.sk.smartid.AuthenticationResponseValidator;
 import ee.sk.smartid.SmartIdClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,11 @@ public class SmartIdClientConfig {
         client.setRelyingPartyName("DEMO");
         client.setHostUrl("https://sid.demo.sk.ee/smart-id-rp/v1/");
         return client;
+    }
+
+    @Bean
+    AuthenticationResponseValidator authenticationResponseValidator() {
+        return new AuthenticationResponseValidator();
     }
 
 }
