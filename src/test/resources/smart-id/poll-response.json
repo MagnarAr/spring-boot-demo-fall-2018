@@ -1,0 +1,10 @@
+{
+  "authenticationIdentity": {
+    "givenName": "Eesnimi",
+    "surName": "Perenimi",
+    "identityCode": "123456789",
+    "country": "EE"
+  },
+  "valid": true,
+  "errors": []
+}
